@@ -3,43 +3,137 @@
 
 //DoRandomInput(1000);
 
-DateTime _firstDeliveryDateTime = new DateTime();
-int _cityDistrict = 0;
-string _deliveryOrder = "";
-string _deliveryLog = "";
+// Инициализация необходимых переменных значениями по умолчанию
+int _cityDistrict = 0;                                                  // Идентификатор района для фильтрации
+DateTime _firstDeliveryDateTime = new DateTime();                       // Время первой доставки, от которой будем искать заказы (время обращения "с")
+TimeSpan _intervalDeliveryTimeSpan = new TimeSpan(0, 30, 0);            // Интервал, вперед на который будем смотреть для поиска подходящих заказов (по умолчанию, исходя из условия, 30 минут)
+string _deliveryOrder = "deliveryOrder.txt";                            // Путь к файлу с результатом выборки
+string _deliveryLog = "deliveryLog.txt";                                // Путь к файлу с лонгами
 
-using (StreamReader initReader = new StreamReader("init.txt"))
+#region Чтение файла конфигурации для переопределения переменных
+using (StreamReader configReader = new StreamReader("config.txt"))
 {
-    string? initLine;
-    while ((initLine = initReader.ReadLine()) != null)
+    string? configLine;
+    while ((configLine = configReader.ReadLine()) != null)
     {
-        var temp = initLine.Split('=');
-
+        var temp = configLine.Split('=');
+        try
+        {
+            switch (temp[0])
+            {
+                case "_cityDistrict":
+                    if (!int.TryParse(temp[1], out _cityDistrict))
+                        throw new Exception("не получилось считать переменную _cityDistrict");
+                    break;
+                case "_firstDeliveryDateTime":
+                    if (!DateTime.TryParse(temp[1], out _firstDeliveryDateTime))
+                        throw new Exception("не получилось считать переменную _firstDeliveryDateTime");
+                    break;
+                case "_intervalDeliveryDateTime":
+                    if (!TimeSpan.TryParse(temp[1], out _intervalDeliveryTimeSpan))
+                        throw new Exception("не получилось считать переменную _intervalDeliveryDateTime");
+                    break;
+                case "_deliveryOrder":
+                    if (!isFileNameValid(temp[1]))
+                        throw new Exception("не получилось считать переменную _deliveryOrder");
+                    else
+                        _deliveryOrder = temp[1];
+                    break;
+                case "_deliveryLog":
+                    if (!isFileNameValid(temp[1]))
+                        throw new Exception("не получилось считать переменную _deliveryLog");
+                    else
+                        _deliveryLog = temp[1];
+                    break;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Ошибка при чтении файла конфигурации: {e.Message}");
+        }
     }
+
+    Console.WriteLine($"""
+                Файл конфигурации прочитан.
+                Идентификатор района для фильтрации:    {_cityDistrict}
+                Время первой доставки:                  {_firstDeliveryDateTime}
+                Интервал фильтрации заказов:            {_intervalDeliveryTimeSpan}
+                Путь к файлу с результатом выборки:     {_deliveryOrder}
+                Путь к файлу с логами:                  {_deliveryLog}
+                """);
 }
+#endregion
+
+#region Считывание параметров с консоли и их замена в зависимости от количества (наличия тех или иных)
+// Параметры с консоли приоритетнее заданных в конфигурационном файле.
+//
+// Переменные в консоли идут строго в следующем порядке:
+//      Идентификатор района для фильтрации
+//      Время первой доставки
+//      Интервал
+//      Путь к файлу с результатом выборки
+//      Путь к файлу с лонгами
+//
+// Не обязательно задавать все параметры. Отсутствующие будут заданы конфигурационным фалом или установлены по умолчанию
 
 try
 {
-    if (!int.TryParse(args[0], out _cityDistrict))
+    switch (args.Length)
     {
-        Console.WriteLine("Неправильный номер района.");
-        return;
+        case 1:
+            if (!int.TryParse(args[0], out _cityDistrict))
+                throw new Exception("не получилось считать переменную _cityDistrict");
+            break;
+        case 2:
+            throw new Exception("не получилось считать переменную _firstDeliveryDateTime");
+        case 3:
+            if (!int.TryParse(args[0], out _cityDistrict))
+                throw new Exception("не получилось считать переменную _cityDistrict");
+            if (!DateTime.TryParse(args[1] + args[2], out _firstDeliveryDateTime))
+                throw new Exception("не получилось считать переменную _firstDeliveryDateTime");
+            break;
+        case 4:
+            if (!int.TryParse(args[0], out _cityDistrict))
+                throw new Exception("не получилось считать переменную _cityDistrict");
+            if (!DateTime.TryParse(args[1] + args[2], out _firstDeliveryDateTime))
+                throw new Exception("не получилось считать переменную _firstDeliveryDateTime");
+            if (!TimeSpan.TryParse(args[3], out _intervalDeliveryTimeSpan))
+                throw new Exception("не получилось считать переменную _intervalDeliveryDateTime");
+            break;
+        case 5:
+            if (!int.TryParse(args[0], out _cityDistrict))
+                throw new Exception("не получилось считать переменную _cityDistrict");
+            if (!DateTime.TryParse(args[1] + args[2], out _firstDeliveryDateTime))
+                throw new Exception("не получилось считать переменную _firstDeliveryDateTime");
+            if (!TimeSpan.TryParse(args[3], out _intervalDeliveryTimeSpan))
+                throw new Exception("не получилось считать переменную _intervalDeliveryDateTime");
+            if (!isFileNameValid(args[4]))
+                throw new Exception("не получилось считать переменную _deliveryOrder");
+            break;
+        case 6:
+            if (!int.TryParse(args[0], out _cityDistrict))
+                throw new Exception("не получилось считать переменную _cityDistrict");
+            if (!DateTime.TryParse(args[1] + args[2], out _firstDeliveryDateTime))
+                throw new Exception("не получилось считать переменную _firstDeliveryDateTime");
+            if (!TimeSpan.TryParse(args[3], out _intervalDeliveryTimeSpan))
+                throw new Exception("не получилось считать переменную _intervalDeliveryDateTime");
+            if (!isFileNameValid(args[4]))
+                throw new Exception("не получилось считать переменную _deliveryOrder");
+            if (!isFileNameValid(args[5]))
+                throw new Exception("не получилось считать переменную _deliveryLog");
+            break;
+        default:
+            Console.WriteLine("Введёных параметров не обнаружено. Фильтрация будет производиться с учётом параметров из конфигурационного файла.");
+            break;
     }
-    if (!DateTime.TryParseExact(args[1] + " " + args[2], "yyyy-MM-dd HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out _firstDeliveryDateTime))
-    {
-        Console.WriteLine("Неправильный формат даты.");
-        Console.WriteLine(args[1]);
-        return;
-    }
-    _deliveryOrder = args[3];
-    _deliveryLog = args[4];
 }
-catch
+catch (Exception e)
 {
-    Console.WriteLine("Произошла ошибка ввода.");
-    return;
+    Console.WriteLine($"Ошибка при считывании параметров с консоли: {e.Message}");
 }
+#endregion
 
+#region Обработка входных данных
 using (StreamReader orderReader = new StreamReader("input.txt"))
 using (StreamWriter orderWriter = new StreamWriter(_deliveryOrder))
 using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
@@ -55,16 +149,40 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
             int.Parse(tempArr[1]),
             int.Parse(tempArr[2]),
             DateTime.Parse(tempArr[3]));
-        if (order.DistrictNumber == _cityDistrict && order.Date >= _firstDeliveryDateTime && order.Date <= _firstDeliveryDateTime.AddMinutes(30))
+        if (order.DistrictNumber == _cityDistrict && order.Date >= _firstDeliveryDateTime && order.Date <= _firstDeliveryDateTime + _intervalDeliveryTimeSpan)
             orderList.Add(order);
     }
 
-    orderList = orderList.OrderBy(x => x.DistrictNumber).ThenBy(x => x.Date).ToList();
+    orderList = orderList.OrderBy(x => x.Date).ToList();
 
     foreach (var order in orderList)
     {
-        orderWriter.WriteLine($"Id = {order.Id,4}; Weight = {order.Weight,2}, DistrictNumer = {order.DistrictNumber,3}, Date = {order.Date.ToString("yyyy-MM-dd HH:mm:ss")}");
+        orderWriter.WriteLine($"Id={order.Id,4}; Weight={order.Weight,2}; DistrictNumer={order.DistrictNumber,1}; Date={order.Date.ToString("yyyy-MM-dd HH:mm:ss")}");
     }
 
-    logWriter.WriteLine($"{DateTime.Now} была произведена фильтрация по району номер {_cityDistrict} и времени первого заказа {_firstDeliveryDateTime}");
+    logWriter.WriteLine($"""
+        [{DateTime.Now}] фильтрация c параметрами:
+            Район:                              {_cityDistrict}
+            Время первого заказа:               {_firstDeliveryDateTime}
+            Интервал:                           {_intervalDeliveryTimeSpan}
+            Путь к файлу с результатом выборки: {_deliveryOrder}
+
+        """);
+}
+#endregion
+
+// Функция для проверки имени файла на корректность
+bool isFileNameValid(string fileName)
+{
+    if ((fileName == null) || (fileName.IndexOfAny(Path.GetInvalidPathChars()) != -1))
+        return false;
+    try
+    {
+        var tempFileInfo = new FileInfo(fileName);
+        return true;
+    }
+    catch (NotSupportedException)
+    {
+        return false;
+    }
 }
