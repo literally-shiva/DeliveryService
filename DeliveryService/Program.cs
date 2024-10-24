@@ -118,17 +118,26 @@ try
                     {
                         string? line;
                         List<Order> orderList = new List<Order>();
+                        int lineIndex = 1;
 
                         while ((line = orderReader.ReadLine()) != null)
                         {
-                            var tempArr = line.Split(";");
+                            try
+                            {
+                                var tempArr = line.Split(";");
 
-                            Order order = new Order(int.Parse(tempArr[0]),
-                                int.Parse(tempArr[1]),
-                                int.Parse(tempArr[2]),
-                                DateTime.Parse(tempArr[3]));
-                            if (order.DistrictNumber == _cityDistrict && order.Date >= _firstDeliveryDateTime && order.Date <= _firstDeliveryDateTime + _intervalDeliveryTimeSpan)
-                                orderList.Add(order);
+                                Order order = new Order(int.Parse(tempArr[0]),
+                                    int.Parse(tempArr[1]),
+                                    int.Parse(tempArr[2]),
+                                    DateTime.Parse(tempArr[3]));
+                                if (order.DistrictNumber == _cityDistrict && order.Date >= _firstDeliveryDateTime && order.Date <= _firstDeliveryDateTime + _intervalDeliveryTimeSpan)
+                                    orderList.Add(order);
+                            }
+                            catch
+                            {
+                                WriteLogAndConsole($"Не удалось прочитать {lineIndex} строку входных данных", logWriter);
+                            }
+                            lineIndex++;
                         }
 
                         orderList = orderList.OrderBy(x => x.Date).ToList();
