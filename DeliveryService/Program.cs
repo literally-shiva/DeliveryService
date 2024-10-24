@@ -64,7 +64,9 @@ switch (args.Length)
         ParseCityDistrict(args[0], out _cityDistrict);
         break;
     case 2:
-        throw new Exception("не удалось считать переменную _firstDeliveryDateTime");
+        ParseCityDistrict(args[0], out _cityDistrict);
+        ParseFirstDeliveryDateTime(args[1], out _firstDeliveryDateTime);
+        break;
     case 3:
         ParseCityDistrict(args[0], out _cityDistrict);
         ParseFirstDeliveryDateTime(args[1] + " " + args[2], out _firstDeliveryDateTime);
@@ -92,10 +94,12 @@ Console.WriteLine("Чтение параметров консоли оконче
 #endregion
 
 #region Обработка входных данных
-using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
+try
 {
-    #region Демонстрация выбранных параметров для фильтрации с учётом файла конфигурации и параметров консоли
-    WriteLogAndConsole($"""
+    using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
+    {
+        #region Демонстрация выбранных параметров для фильтрации с учётом файла конфигурации и параметров консоли
+        WriteLogAndConsole($"""
         Инициализация фильтрации c параметрами:
             Район: {_cityDistrict}
             Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}
@@ -103,40 +107,54 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
             Путь к файлу с результатом выборки: {_deliveryOrder}
             Путь к файлу с логами: {_deliveryLog}
         """, logWriter);
-    #endregion
-    try
-    {
-        using (StreamReader orderReader = new StreamReader("input.txt"))
-        using (StreamWriter orderWriter = new StreamWriter(_deliveryOrder))
+        #endregion
+        try
         {
-            string? line;
-            List<Order> orderList = new List<Order>();
-
-            while ((line = orderReader.ReadLine()) != null)
+            using (StreamWriter orderWriter = new StreamWriter(_deliveryOrder))
             {
-                var tempArr = line.Split(";");
+                try
+                {
+                    using (StreamReader orderReader = new StreamReader("input.txt"))
+                    {
+                        string? line;
+                        List<Order> orderList = new List<Order>();
 
-                Order order = new Order(int.Parse(tempArr[0]),
-                    int.Parse(tempArr[1]),
-                    int.Parse(tempArr[2]),
-                    DateTime.Parse(tempArr[3]));
-                if (order.DistrictNumber == _cityDistrict && order.Date >= _firstDeliveryDateTime && order.Date <= _firstDeliveryDateTime + _intervalDeliveryTimeSpan)
-                    orderList.Add(order);
+                        while ((line = orderReader.ReadLine()) != null)
+                        {
+                            var tempArr = line.Split(";");
+
+                            Order order = new Order(int.Parse(tempArr[0]),
+                                int.Parse(tempArr[1]),
+                                int.Parse(tempArr[2]),
+                                DateTime.Parse(tempArr[3]));
+                            if (order.DistrictNumber == _cityDistrict && order.Date >= _firstDeliveryDateTime && order.Date <= _firstDeliveryDateTime + _intervalDeliveryTimeSpan)
+                                orderList.Add(order);
+                        }
+
+                        orderList = orderList.OrderBy(x => x.Date).ToList();
+
+                        foreach (var order in orderList)
+                        {
+                            orderWriter.WriteLine($"Id={order.Id,5}; Weight={order.Weight,2}; DistrictNumer={order.DistrictNumber,1}; Date={order.Date.ToString("yyyy-MM-dd HH:mm:ss")}");
+                        }
+                        WriteLogAndConsole($"Найдено {orderList.Count} записей.", logWriter);
+                    }
+                }
+                catch
+                {
+                    WriteLogAndConsole("Ошибка: файл входных данных отсутствует", logWriter);
+                }
             }
-
-            orderList = orderList.OrderBy(x => x.Date).ToList();
-
-            foreach (var order in orderList)
-            {
-                orderWriter.WriteLine($"Id={order.Id,5}; Weight={order.Weight,2}; DistrictNumer={order.DistrictNumber,1}; Date={order.Date.ToString("yyyy-MM-dd HH:mm:ss")}");
-            }
-            WriteLogAndConsole($"Найдено {orderList.Count} записей.", logWriter);
+        }
+        catch
+        {
+            WriteLogAndConsole("Ошибка: не получилось найти часть пути к файлу с результатом выборки", logWriter);
         }
     }
-    catch
-    {
-        WriteLogAndConsole("Ошибка: файл входных данных отсутствует", logWriter);
-    }
+}
+catch
+{
+    Console.WriteLine("Ошибка: не получилось найти часть пути к файлу логов");
 }
 #endregion
 
