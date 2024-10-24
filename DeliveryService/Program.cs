@@ -1,7 +1,4 @@
 ﻿using DeliveryService;
-//using static DeliveryService.RandomDataInput;
-
-//DoRandomInput(10000);
 
 // Инициализация необходимых переменных значениями по умолчанию
 int _cityDistrict = 1;                                                  // Идентификатор района для фильтрации
