@@ -15,7 +15,7 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
     #region Чтение файла конфигурации для первичного определения параметров
     using (StreamReader configReader = new StreamReader("config.txt"))
     {
-        WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Чтение файла конфигурации", logWriter);
+        WriteLogAndConsole($"Чтение файла конфигурации", logWriter);
         string? configLine;
         while ((configLine = configReader.ReadLine()) != null)
         {
@@ -30,7 +30,7 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
                             _cityDistrict = 1;
                             throw new Exception("не удалось считать переменную _cityDistrict");
                         }
-                        WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Район: {_cityDistrict}", logWriter);
+                        WriteLogAndConsole($"Район: {_cityDistrict}", logWriter);
                         break;
                     case "_firstDeliveryDateTime":
                         if (!DateTime.TryParse(temp[1], out _firstDeliveryDateTime))
@@ -38,7 +38,7 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
                             _firstDeliveryDateTime = DateTime.Now;
                             throw new Exception("не удалось считать переменную _firstDeliveryDateTime");
                         }
-                        WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
+                        WriteLogAndConsole($"Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
                         break;
                     case "_intervalDeliveryDateTime":
                         if (!TimeSpan.TryParse(temp[1], out _intervalDeliveryTimeSpan))
@@ -46,19 +46,19 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
                             _intervalDeliveryTimeSpan = new TimeSpan(0, 30, 0);
                             throw new Exception("не удалось считать переменную _intervalDeliveryDateTime");
                         }
-                        WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Интервал: {_intervalDeliveryTimeSpan}", logWriter);
+                        WriteLogAndConsole($"Интервал: {_intervalDeliveryTimeSpan}", logWriter);
                         break;
                     case "_deliveryOrder":
                         if (!isFileNameValid(temp[1]))
                             throw new Exception("не удалось считать переменную _deliveryOrder");
                         _deliveryOrder = temp[1];
-                        WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Путь к файлу с результатом выборки: {_deliveryOrder}", logWriter);
+                        WriteLogAndConsole($"Путь к файлу с результатом выборки: {_deliveryOrder}", logWriter);
                         break;
                     case "_deliveryLog":
                         if (!isFileNameValid(temp[1]))
                             throw new Exception("не удалось считать переменную _deliveryLog");
                         _deliveryLog = temp[1];
-                        WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Путь к файлу с логами: {_deliveryLog}", logWriter);
+                        WriteLogAndConsole($"Путь к файлу с логами: {_deliveryLog}", logWriter);
                         break;
                     default:
                         throw new Exception("обнаружен неизвестный параметр");
@@ -66,10 +66,10 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
             }
             catch (Exception e)
             {
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Ошибка при чтении файла конфигурации: {e.Message}", logWriter);
+                WriteLogAndConsole($"Ошибка при чтении файла конфигурации: {e.Message}", logWriter);
             }
         }
-        WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Файл конфигурации прочитан", logWriter);
+        WriteLogAndConsole($"Файл конфигурации прочитан", logWriter);
     }
     #endregion
 
@@ -83,13 +83,13 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
     //      Путь к файлу с результатом выборки
     //      Путь к файлу с логами
 
-    WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Начало обработки параметров консоли", logWriter);
+    WriteLogAndConsole($"Начало обработки параметров консоли", logWriter);
     try
     {
         switch (args.Length)
         {
             case 0:
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Дополнительные параметры запуска отсутствуют и будут взяты из конфигурационного файла", logWriter);
+                WriteLogAndConsole($"Дополнительные параметры запуска отсутствуют и будут взяты из конфигурационного файла", logWriter);
                 break;
             case 1:
                 if (!int.TryParse(args[0], out _cityDistrict))
@@ -97,7 +97,7 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
                     _cityDistrict = 1;
                     throw new Exception("не удалось считать переменную _cityDistrict");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Район: {_cityDistrict}", logWriter);
+                WriteLogAndConsole($"Район: {_cityDistrict}", logWriter);
                 break;
             case 2:
                 throw new Exception("не удалось считать переменную _firstDeliveryDateTime");
@@ -107,13 +107,13 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
                     _cityDistrict = 1;
                     throw new Exception("не удалось считать переменную _cityDistrict");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Район: {_cityDistrict}", logWriter);
+                WriteLogAndConsole($"Район: {_cityDistrict}", logWriter);
                 if (!DateTime.TryParse(args[1] + " " + args[2], out _firstDeliveryDateTime))
                 {
                     _firstDeliveryDateTime = DateTime.Now;
                     throw new Exception("не удалось считать переменную _firstDeliveryDateTime");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Время первой доставки: {_firstDeliveryDateTime}", logWriter);
+                WriteLogAndConsole($"Время первой доставки: {_firstDeliveryDateTime}", logWriter);
                 break;
             case 4:
                 if (!int.TryParse(args[0], out _cityDistrict))
@@ -121,19 +121,19 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
                     _cityDistrict = 1;
                     throw new Exception("не удалось считать переменную _cityDistrict");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Район: {_cityDistrict}", logWriter);
+                WriteLogAndConsole($"Район: {_cityDistrict}", logWriter);
                 if (!DateTime.TryParse(args[1] + " " + args[2], out _firstDeliveryDateTime))
                 {
                     _firstDeliveryDateTime = DateTime.Now;
                     throw new Exception("не удалось считать переменную _firstDeliveryDateTime");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
+                WriteLogAndConsole($"Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
                 if (!TimeSpan.TryParse(args[3], out _intervalDeliveryTimeSpan))
                 {
                     _intervalDeliveryTimeSpan = new TimeSpan(0, 30, 0);
                     throw new Exception("не удалось считать переменную _intervalDeliveryDateTime");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Интервал: {_intervalDeliveryTimeSpan}", logWriter);
+                WriteLogAndConsole($"Интервал: {_intervalDeliveryTimeSpan}", logWriter);
                 break;
             case 5:
                 if (!int.TryParse(args[0], out _cityDistrict))
@@ -141,23 +141,23 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
                     _cityDistrict = 1;
                     throw new Exception("не удалось считать переменную _cityDistrict");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Район: {_cityDistrict}", logWriter);
+                WriteLogAndConsole($"Район: {_cityDistrict}", logWriter);
                 if (!DateTime.TryParse(args[1] + " " + args[2], out _firstDeliveryDateTime))
                 {
                     _firstDeliveryDateTime = DateTime.Now;
                     throw new Exception("не удалось считать переменную _firstDeliveryDateTime");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
+                WriteLogAndConsole($"Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
                 if (!TimeSpan.TryParse(args[3], out _intervalDeliveryTimeSpan))
                 {
                     _intervalDeliveryTimeSpan = new TimeSpan(0, 30, 0);
                     throw new Exception("не удалось считать переменную _intervalDeliveryDateTime");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Интервал: {_intervalDeliveryTimeSpan}", logWriter);
+                WriteLogAndConsole($"Интервал: {_intervalDeliveryTimeSpan}", logWriter);
                 if (!isFileNameValid(args[4]))
                     throw new Exception("не удалось считать переменную _deliveryOrder");
                 _deliveryOrder = args[4];
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Путь к файлу с результатом выборки: {_deliveryOrder}", logWriter);
+                WriteLogAndConsole($"Путь к файлу с результатом выборки: {_deliveryOrder}", logWriter);
                 break;
             case 6:
                 if (!int.TryParse(args[0], out _cityDistrict))
@@ -165,27 +165,27 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
                     _cityDistrict = 1;
                     throw new Exception("не удалось считать переменную _cityDistrict");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Район: {_cityDistrict}", logWriter);
+                WriteLogAndConsole($"Район: {_cityDistrict}", logWriter);
                 if (!DateTime.TryParse(args[1] + " " + args[2], out _firstDeliveryDateTime))
                 {
                     _firstDeliveryDateTime = DateTime.Now;
                     throw new Exception("не удалось считать переменную _firstDeliveryDateTime");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
+                WriteLogAndConsole($"Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
                 if (!TimeSpan.TryParse(args[3], out _intervalDeliveryTimeSpan))
                 {
                     _intervalDeliveryTimeSpan = new TimeSpan(0, 30, 0);
                     throw new Exception("не удалось считать переменную _intervalDeliveryDateTime");
                 }
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Интервал: {_intervalDeliveryTimeSpan}", logWriter);
+                WriteLogAndConsole($"Интервал: {_intervalDeliveryTimeSpan}", logWriter);
                 if (!isFileNameValid(args[4]))
                     throw new Exception("не удалось считать переменную _deliveryOrder");
                 _deliveryOrder = args[4];
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Путь к файлу с результатом выборки: {_deliveryOrder}", logWriter);
+                WriteLogAndConsole($"Путь к файлу с результатом выборки: {_deliveryOrder}", logWriter);
                 if (!isFileNameValid(args[5]))
                     throw new Exception("не удалось считать переменную _deliveryLog");
                 _deliveryLog = args[5];
-                WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Путь к файлу с логами: {_deliveryLog}", logWriter);
+                WriteLogAndConsole($"Путь к файлу с логами: {_deliveryLog}", logWriter);
                 break;
             case > 6:
                 throw new Exception("на вход получено больше параметров, чем ожидалось");
@@ -193,19 +193,19 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
     }
     catch (Exception e)
     {
-        WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Ошибка при считывании параметров с консоли: {e.Message}", logWriter);
+        WriteLogAndConsole($"Ошибка при считывании параметров с консоли: {e.Message}", logWriter);
     }
-    WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Конец обработки параметрво консоли", logWriter);
+    WriteLogAndConsole($"Конец обработки параметрво консоли", logWriter);
     #endregion
 
     #region Обработка входных данных
     WriteLogAndConsole($"""
-        [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Начало фильтрации c параметрами:
-        [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Район: {_cityDistrict}
-        [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}
-        [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Интервал: {_intervalDeliveryTimeSpan}
-        [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Путь к файлу с результатом выборки: {_deliveryOrder}
-        [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Путь к файлу с логами: {_deliveryLog}
+        Начало фильтрации c параметрами:
+            Район: {_cityDistrict}
+            Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}
+            Интервал: {_intervalDeliveryTimeSpan}
+            Путь к файлу с результатом выборки: {_deliveryOrder}
+            Путь к файлу с логами: {_deliveryLog}
         """, logWriter);
 
     using (StreamReader orderReader = new StreamReader("input.txt"))
@@ -232,7 +232,7 @@ using (StreamWriter logWriter = new StreamWriter(_deliveryLog, true))
         {
             orderWriter.WriteLine($"Id={order.Id,5}; Weight={order.Weight,2}; DistrictNumer={order.DistrictNumber,1}; Date={order.Date.ToString("yyyy-MM-dd HH:mm:ss")}");
         }
-        WriteLogAndConsole($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] Найдено {orderList.Count} записей.", logWriter);
+        WriteLogAndConsole($"Найдено {orderList.Count} записей.", logWriter);
     }
     #endregion
 }
@@ -257,7 +257,7 @@ bool isFileNameValid(string fileName)
 // Функция вывода информации в консоль и логирования
 void WriteLogAndConsole(string message, StreamWriter logWriter)
 {
-    Console.WriteLine(message);
-    logWriter.WriteLine(message);
+    Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {message}");
+    logWriter.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {message}");
 }
 #endregion
