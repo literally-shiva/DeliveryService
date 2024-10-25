@@ -12,7 +12,7 @@ try
 {
     using (StreamReader configReader = new StreamReader("config.txt"))
     {
-        Console.WriteLine("Чтение файла конфигурации");
+        Console.WriteLine("[INFO] Чтение файла конфигурации");
         string? configLine;
         while ((configLine = configReader.ReadLine()) != null)
         {
@@ -40,25 +40,25 @@ try
             }
             catch
             {
-                Console.WriteLine($"Ошибка при чтении файла конфигурации: не удалось прочитать значение параметра");
+                Console.WriteLine($"[INFO] Ошибка при чтении файла конфигурации: не удалось прочитать значение параметра");
             }
         }
-        Console.WriteLine("Чтение файла конфигурации окончено");
+        Console.WriteLine("[INFO] Чтение файла конфигурации окончено");
     }
 }
 catch
 {
-    Console.WriteLine("Файл конфигурации отсутствует");
+    Console.WriteLine("[INFO] Файл конфигурации отсутствует");
 }
 #endregion
 
 #region Считывание параметров с консоли
-Console.WriteLine("Чтение параметров консоли");
+Console.WriteLine("[INFO] Чтение параметров консоли");
 
 switch (args.Length)
 {
     case 0:
-        Console.WriteLine($"Дополнительные параметры запуска отсутствуют и будут взяты из конфигурационного файла");
+        Console.WriteLine($"[INFO] Дополнительные параметры запуска отсутствуют и будут взяты из конфигурационного файла или установлены по умолчанию");
         break;
     case 1:
         ParseCityDistrict(args[0], out _cityDistrict);
@@ -90,7 +90,7 @@ switch (args.Length)
         ParseDeliveryLog(args[5], out _deliveryLog);
         break;
 }
-Console.WriteLine("Чтение параметров консоли окончено");
+Console.WriteLine("[INFO] Чтение параметров консоли окончено");
 #endregion
 
 #region Обработка входных данных
@@ -191,7 +191,7 @@ void WriteLogAndConsole(string message, StreamWriter logWriter)
     logWriter.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {message}");
 }
 
-// Методы парсинга и установки параметров из файла конфигурации в случае неудачи
+// Методы парсинга и установки параметров из файла конфигурации или по умолчанию в случае неудачи
 // Метод парсинга _cityDistrict
 void ParseCityDistrict(string strToParse, out int cityDistrict)
 {
@@ -199,7 +199,7 @@ void ParseCityDistrict(string strToParse, out int cityDistrict)
     if (!int.TryParse(strToParse, out cityDistrict))
     {
         cityDistrict = tempCityDistrict;
-        Console.WriteLine("Не удалось считать _cityDistrict");
+        Console.WriteLine("[INFO] Не удалось считать _cityDistrict");
     }
 }
 
@@ -210,7 +210,7 @@ void ParseFirstDeliveryDateTime(string strToParse, out DateTime firstDeliveryDat
     if (!DateTime.TryParse(strToParse, out firstDeliveryDateTime))
     {
         firstDeliveryDateTime = tempFirstDeliveryDateTime;
-        Console.WriteLine("Не удалось считать _firstDeliveryDateTime");
+        Console.WriteLine("[INFO] Не удалось считать _firstDeliveryDateTime");
     }
 }
 
@@ -221,7 +221,7 @@ void ParseIntervalDeliveryDateTime(string strToParse, out TimeSpan intervalDeliv
     if (!TimeSpan.TryParse(strToParse, out intervalDeliveryTimeSpan))
     {
         intervalDeliveryTimeSpan = tempIntervalDeliveryTimeSpan;
-        Console.WriteLine("Не удалось считать _intervalDeliveryTimeSpan");
+        Console.WriteLine("[INFO] Не удалось считать _intervalDeliveryTimeSpan");
     }
 }
 
@@ -231,7 +231,7 @@ void ParseDeliveryOrder(string strToParse, out string deliveryOrder)
     if (!isFileNameValid(strToParse))
     {
         strToParse = _deliveryOrder;
-        Console.WriteLine("Не удалось считать _deliveryOrder");
+        Console.WriteLine("[INFO] Не удалось считать _deliveryOrder");
     }
     deliveryOrder = strToParse;
 }
@@ -242,7 +242,7 @@ void ParseDeliveryLog(string strToParse, out string deliveryLog)
     if (!isFileNameValid(strToParse))
     {
         strToParse = _deliveryLog;
-        Console.WriteLine("Не удалось считать _deliveryLog");
+        Console.WriteLine("[INFO] Не удалось считать _deliveryLog");
     }
     deliveryLog = strToParse;
 }
