@@ -151,8 +151,8 @@
                                     WriteLogAndConsole($"Найденные записи: ", logWriter);
                                     foreach (var order in orderList)
                                     {
-                                        orderWriter.WriteLine($"Id={order.Id}; Weight={order.Weight}; DistrictNumer={order.DistrictNumber}; Date={order.Date.ToString("yyyy-MM-dd HH:mm:ss")}");
-                                        WriteLogAndConsole($"Id={order.Id}; Weight={order.Weight}; DistrictNumer={order.DistrictNumber}; Date={order.Date.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
+                                        orderWriter.WriteLine($"{order.Id};{order.Weight};{order.DistrictNumber};{order.Date.ToString("yyyy-MM-dd HH:mm:ss")}");
+                                        WriteLogAndConsole($"{order.Id};{order.Weight};{order.DistrictNumber};{order.Date.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
                                     }
                                     WriteLogAndConsole($"Всего найдено {orderList.Count} записей.", logWriter);
                                 }
