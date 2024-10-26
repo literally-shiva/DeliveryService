@@ -1,0 +1,15 @@
+﻿Id=5354; Weight=31; DistrictNumer=3; Date=2024-10-01 16:03:34
+Id=4251; Weight=2; DistrictNumer=3; Date=2024-10-01 16:11:16
+Id=1946; Weight=29; DistrictNumer=3; Date=2024-10-01 16:11:29
+Id=2159; Weight=13; DistrictNumer=3; Date=2024-10-01 16:12:07
+Id=8539; Weight=46; DistrictNumer=3; Date=2024-10-01 16:12:37
+Id=4305; Weight=36; DistrictNumer=3; Date=2024-10-01 16:15:01
+Id=2148; Weight=24; DistrictNumer=3; Date=2024-10-01 16:17:53
+Id=11; Weight=44; DistrictNumer=3; Date=2024-10-01 16:18:17
+Id=645; Weight=40; DistrictNumer=3; Date=2024-10-01 16:18:45
+Id=1336; Weight=32; DistrictNumer=3; Date=2024-10-01 16:19:19
+Id=2476; Weight=42; DistrictNumer=3; Date=2024-10-01 16:20:32
+Id=3897; Weight=7; DistrictNumer=3; Date=2024-10-01 16:24:13
+Id=9688; Weight=0; DistrictNumer=3; Date=2024-10-01 16:28:22
+Id=7752; Weight=10; DistrictNumer=3; Date=2024-10-01 16:28:53
+Id=1967; Weight=42; DistrictNumer=3; Date=2024-10-01 16:29:51

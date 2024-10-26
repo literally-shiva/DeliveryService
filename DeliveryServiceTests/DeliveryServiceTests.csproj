@@ -25,10 +25,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="DataForTests\expectedTestWithDateTime.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DataForTests\expectedTestWithDistrict.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DataForTests\expectedTestWithInterval.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DataForTests\expectedTestWithLogPath.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DataForTests\expectedTestWithOrderPath.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Test1\deliveryOrder1.txt">
+    <None Update="DataForTests\expectedTestWithoutParams.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
