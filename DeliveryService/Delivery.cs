@@ -104,13 +104,13 @@
                 {
                     #region Демонстрация выбранных параметров для фильтрации с учётом файла конфигурации и параметров консоли
                     WriteLogAndConsole($"""
-        Инициализация фильтрации c параметрами:
-            Район: {_cityDistrict}
-            Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}
-            Интервал: {_intervalDeliveryTimeSpan}
-            Путь к файлу с результатом выборки: {_deliveryOrder}
-            Путь к файлу с логами: {_deliveryLog}
-        """, logWriter);
+                        Инициализация фильтрации c параметрами:
+                            Район: {_cityDistrict}
+                            Время первой доставки: {_firstDeliveryDateTime.ToString("yyyy-MM-dd HH:mm:ss")}
+                            Интервал: {_intervalDeliveryTimeSpan}
+                            Путь к файлу с результатом выборки: {_deliveryOrder}
+                            Путь к файлу с логами: {_deliveryLog}
+                        """, logWriter);
                     #endregion
                     try
                     {
@@ -134,7 +134,9 @@
                                                 int.Parse(tempArr[1]),
                                                 int.Parse(tempArr[2]),
                                                 DateTime.Parse(tempArr[3]));
-                                            if (order.DistrictNumber == _cityDistrict && order.Date >= _firstDeliveryDateTime && order.Date <= _firstDeliveryDateTime + _intervalDeliveryTimeSpan)
+                                            if (order.DistrictNumber == _cityDistrict &&
+                                                    order.Date >= _firstDeliveryDateTime &&
+                                                    order.Date <= _firstDeliveryDateTime + _intervalDeliveryTimeSpan)
                                                 orderList.Add(order);
                                         }
                                         catch
@@ -146,11 +148,13 @@
 
                                     orderList = orderList.OrderBy(x => x.Date).ToList();
 
+                                    WriteLogAndConsole($"Найденные записи: ", logWriter);
                                     foreach (var order in orderList)
                                     {
                                         orderWriter.WriteLine($"Id={order.Id}; Weight={order.Weight}; DistrictNumer={order.DistrictNumber}; Date={order.Date.ToString("yyyy-MM-dd HH:mm:ss")}");
+                                        WriteLogAndConsole($"Id={order.Id}; Weight={order.Weight}; DistrictNumer={order.DistrictNumber}; Date={order.Date.ToString("yyyy-MM-dd HH:mm:ss")}", logWriter);
                                     }
-                                    WriteLogAndConsole($"Найдено {orderList.Count} записей.", logWriter);
+                                    WriteLogAndConsole($"Всего найдено {orderList.Count} записей.", logWriter);
                                 }
                             }
                             catch
@@ -195,7 +199,7 @@
                 logWriter.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {message}");
             }
 
-            // Методы парсинга и установки параметров из файла конфигурации или по умолчанию в случае неудачи
+            #region Методы парсинга и установки параметров из файла конфигурации или по умолчанию в случае неудачи
             // Метод парсинга _cityDistrict
             void ParseCityDistrict(string strToParse, out int cityDistrict)
             {
@@ -250,6 +254,8 @@
                 }
                 deliveryLog = strToParse;
             }
+            #endregion
+
             #endregion
         }
     }

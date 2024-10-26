@@ -3,7 +3,7 @@ using DeliveryService;
 namespace DeliveryServiceTests
 {
     [TestClass]
-    public class UnitTest1
+    public class DeliveryTest
     {
         [TestMethod]
         public void TestMethod1()
